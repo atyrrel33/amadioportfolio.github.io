@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amadio's Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background-color: #1B2B1B; /* Darker forest green header */
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background-color: #233623; /* Forest green cards */
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-thumbnail {
+            width: 100%;
+            height: 200px;
+            background-color: #1B2B1B;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(34, 51, 34, 0.9); /* Forest green play button */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-thumbnail:hover .play-button {
+            opacity: 1;
+        }
+
+        .play-button::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 10px 0 10px 20px;
+            border-color: transparent transparent transparent #ffffff;
+            margin-left: 5px;
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        .project-title {
+            color: #ffffff;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #1B2B1B; /* Forest green modal */
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 30px;
+            height: 30px;
+            background-color: #2B402B; /* Darker forest green close button */
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            z-index: 1001;
+        }
+
+        .video-container {
+            position: relative;
+            padding-top: 56.25%;
+            background-color: #000;
+        }
+
+        .video-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .modal-info {
+            padding: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+
+            .modal {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Amadio's Portfolio</h1>
+    </header>
+    
+    <main class="container">
+        <div class="portfolio-grid">
+            <!-- WAREHOUSE #33 Trailer -->
+            <div class="project-card" onclick="openModal('warehouse33trailer')">
+                <div class="project-thumbnail">
+                    <img src="https://vumbnail.com/637566316.jpg" alt="WAREHOUSE #33 Trailer" />
+                    <div class="play-button"></div>
+                </div>
+                <div class="project-info">
+                    <h2 class="project-title">WAREHOUSE #33 Trailer</h2>
+                </div>
+            </div>
+
+            <!-- THE NEW YEAR -->
+            <div class="project-card" onclick="openModal('newyear')">
+                <div class="project-thumbnail">
+                    <img src="https://vumbnail.com/496131319.jpg" alt="THE NEW YEAR" />
+                    <div class="play-button"></div>
+                </div>
+                <div class="project-info">
+                    <h2 class="project-title">THE NEW YEAR</h2>
+                </div>
+            </div>
+
+            <!-- MOVERS PILOT EPISODE -->
+            <div class="project-card" onclick="openModal('movers')">
+                <div class="project-thumbnail">
+                    <img src="https://vumbnail.com/1028655169.jpg" alt="MOVERS PILOT EPISODE" />
+                    <div class="play-button"></div>
+                </div>
+                <div class="project-info">
+                    <h2 class="project-title">MOVERS PILOT EPISODE</h2>
+                </div>
+            </div>
+
+            <!-- WAREHOUSE #33 -->
+            <div class="project-card" onclick="openModal('warehouse33')">
+                <div class="project-thumbnail">
+                    <img src="https://vumbnail.com/545606028.jpg" alt="WAREHOUSE #33" />
+                    <div class="play-button"></div>
+                </div>
+                <div class="project-info">
+                    <h2 class="project-title">WAREHOUSE #33</h2>
+                </div>
+            </div>
+
+            <!-- JEGNA -->
+            <div class="project-card" onclick="openModal('jegna')">
+                <div class="project-thumbnail">
+                    <img src="https://vumbnail.com/337594693.jpg" alt="JEGNA" />
+                    <div class="play-button"></div>
+                </div>
+                <div class="project-info">
+                    <h2 class="project-title">JEGNA</h2>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <div class="video-container" id="videoContainer">
+            </div>
+            <div class="modal-info">
+                <h2 id="modalTitle" class="project-title"></h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projects = {
+            warehouse33trailer: {
+                title: "WAREHOUSE #33 Trailer",
+                id: "637566316"
+            },
+            newyear: {
+                title: "THE NEW YEAR",
+                id: "496131319"
+            },
+            movers: {
+                title: "MOVERS PILOT EPISODE",
+                id: "1028655169"
+            },
+            warehouse33: {
+                title: "WAREHOUSE #33",
+                id: "545606028"
+            },
+            jegna: {
+                title: "JEGNA",
+                id: "337594693"
+            }
+        };
+
+        function openModal(projectId) {
+            const modal = document.getElementById('videoModal');
+            const videoContainer = document.getElementById('videoContainer');
+            const title = document.getElementById('modalTitle');
+            const project = projects[projectId];
+            
+            title.textContent = project.title;
+            
+            // Clear previous content
+            videoContainer.innerHTML = '';
+            
+            // Create Vimeo embed
+            const iframe = document.createElement('iframe');
+            iframe.className = 'video-iframe';
+            iframe.src = `https://player.vimeo.com/video/${project.id}?autoplay=1&title=0&byline=0&portrait=0`;
+            iframe.allow = "autoplay; fullscreen; picture-in-picture";
+            videoContainer.appendChild(iframe);
+            
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const videoContainer = document.getElementById('videoContainer');
+            videoContainer.innerHTML = '';
+            modal.style.display = 'none';
+        }
+
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
