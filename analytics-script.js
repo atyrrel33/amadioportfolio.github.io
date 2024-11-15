@@ -2,6 +2,8 @@
 class SimpleAnalytics {
     constructor() {
         this.storageKey = 'page_visits';
+        this.passwordKey = 'analytics_auth';
+        this.password = 'EctorStaty888-'; // Change this to your desired password
         this.initStorage();
     }
 
@@ -15,7 +17,6 @@ class SimpleAnalytics {
         const currentPath = window.location.pathname;
         const visits = JSON.parse(localStorage.getItem(this.storageKey));
         
-        // Get current date in YYYY-MM-DD format
         const today = new Date().toISOString().split('T')[0];
         
         if (!visits[currentPath]) {
@@ -54,11 +55,32 @@ class SimpleAnalytics {
 
         return stats;
     }
+
+    login(password) {
+        if (password === this.password) {
+            localStorage.setItem(this.passwordKey, 'true');
+            return true;
+        }
+        return false;
+    }
+
+    logout() {
+        localStorage.removeItem(this.passwordKey);
+    }
+
+    isLoggedIn() {
+        return localStorage.getItem(this.passwordKey) === 'true';
+    }
 }
 
-// Usage example:
+// Initialize analytics
 const analytics = new SimpleAnalytics();
 analytics.trackPageView();
 
-// Display stats in console
-console.log('Website Statistics:', analytics.getStats());
+// Only show the button if logged in or after successful login
+function checkAndShowControls() {
+    const controls = document.getElementById('analytics-controls');
+    if (controls) {
+        controls.style.display = analytics.isLoggedIn() ? 'block' : 'none';
+    }
+}
