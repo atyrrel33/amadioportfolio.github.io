@@ -29,7 +29,7 @@
         }
 
         header {
-            background-color: #1B2B1B; /* Darker forest green header */
+            background-color: #1B2B1B;
             padding: 2rem 0;
             margin-bottom: 3rem;
         }
@@ -49,7 +49,7 @@
         }
 
         .project-card {
-            background-color: #233623; /* Forest green cards */
+            background-color: #233623;
             border-radius: 8px;
             overflow: hidden;
             transition: transform 0.3s ease;
@@ -81,7 +81,7 @@
             transform: translate(-50%, -50%);
             width: 60px;
             height: 60px;
-            background-color: rgba(34, 51, 34, 0.9); /* Forest green play button */
+            background-color: rgba(34, 51, 34, 0.9);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -134,7 +134,7 @@
             width: 100%;
             max-width: 1000px;
             margin: 0 auto;
-            background-color: #1B2B1B; /* Forest green modal */
+            background-color: #1B2B1B;
             border-radius: 8px;
             overflow: hidden;
         }
@@ -145,7 +145,7 @@
             right: 1rem;
             width: 30px;
             height: 30px;
-            background-color: #2B402B; /* Darker forest green close button */
+            background-color: #2B402B;
             border: none;
             border-radius: 50%;
             cursor: pointer;
@@ -267,6 +267,7 @@
         </div>
     </div>
 
+    <!-- Videos Script -->
     <script>
         const projects = {
             warehouse33trailer: {
@@ -324,81 +325,94 @@
                 closeModal();
             }
         });
+    </script>
+
+    <!-- Analytics Scripts -->
     <script src="analytics.js"></script>
-<!-- Add this to your HTML file -->
-<div id="analytics-controls" style="display: none;">
-    <div id="analytics-panel" style="display: none; position: fixed; bottom: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;">
-        <h3>Site Analytics</h3>
-        <div id="stats-content"></div>
-        <button onclick="toggleAnalytics()" style="position: absolute; top: 10px; right: 10px; border: none; background: none; cursor: pointer;">×</button>
-        <button onclick="logout()" style="margin-top: 10px; padding: 5px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">Logout</button>
+    <script>
+        // Analytics functions
+        function showLogin() {
+            const password = prompt('Enter password to view analytics:');
+            if (window.analytics.login(password)) {
+                checkAndShowControls();
+            }
+        }
+
+        function logout() {
+            window.analytics.logout();
+            checkAndShowControls();
+            const panel = document.getElementById('analytics-panel');
+            panel.style.display = 'none';
+        }
+
+        function toggleAnalytics() {
+            const panel = document.getElementById('analytics-panel');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                updateStats();
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        function updateStats() {
+            const stats = window.analytics.getStats();
+            const content = document.getElementById('stats-content');
+            
+            let html = `<p><strong>Total Visits:</strong> ${stats.totalVisits}</p>`;
+            
+            html += '<h4>Page Views:</h4><ul>';
+            for (const page in stats.pageStats) {
+                html += `<li>${page}: ${stats.pageStats[page]} visits</li>`;
+            }
+            html += '</ul>';
+            
+            html += '<h4>Daily Stats:</h4><ul>';
+            const sortedDates = Object.keys(stats.dailyStats).sort().reverse();
+            for (const date of sortedDates) {
+                html += `<li>${date}: ${stats.dailyStats[date]} visits</li>`;
+            }
+            html += '</ul>';
+            
+            content.innerHTML = html;
+        }
+
+        function checkAndShowControls() {
+            const controls = document.getElementById('analytics-controls');
+            if (controls && window.analytics) {
+                controls.style.display = window.analytics.isLoggedIn() ? 'block' : 'none';
+            }
+        }
+
+        // Initialize analytics display
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAndShowControls();
+            
+            // Update stats every minute if panel is visible
+            setInterval(() => {
+                const panel = document.getElementById('analytics-panel');
+                if (panel && panel.style.display === 'block') {
+                    updateStats();
+                }
+            }, 60000);
+        });
+    </script>
+
+    <!-- Analytics Controls HTML -->
+    <div id="analytics-controls" style="display: none;">
+        <div id="analytics-panel" style="display: none; position: fixed; bottom: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;">
+            <h3>Site Analytics</h3>
+            <div id="stats-content"></div>
+            <button onclick="toggleAnalytics()" style="position: absolute; top: 10px; right: 10px; border: none; background: none; cursor: pointer;">×</button>
+            <button onclick="logout()" style="margin-top: 10px; padding: 5px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">Logout</button>
+        </div>
+
+        <button onclick="toggleAnalytics()" style="position: fixed; bottom: 20px; right: 20px; padding: 10px; border-radius: 5px; border: none; background: #007bff; color: white; cursor: pointer;">
+            Show Analytics
+        </button>
     </div>
 
-    <button onclick="toggleAnalytics()" style="position: fixed; bottom: 20px; right: 20px; padding: 10px; border-radius: 5px; border: none; background: #007bff; color: white; cursor: pointer;">
-        Show Analytics
-    </button>
-</div>
-
-<!-- Add a hidden login button that's always visible -->
-<button onclick="showLogin()" style="position: fixed; bottom: 20px; right: 20px; padding: 10px; border-radius: 5px; border: none; background: transparent; cursor: pointer; color: transparent;">.</button>
-
-<script>
-function showLogin() {
-    const password = prompt('Enter password to view analytics:');
-    if (analytics.login(password)) {
-        checkAndShowControls();
-    }
-}
-
-function logout() {
-    analytics.logout();
-    checkAndShowControls();
-    const panel = document.getElementById('analytics-panel');
-    panel.style.display = 'none';
-}
-
-function toggleAnalytics() {
-    const panel = document.getElementById('analytics-panel');
-    if (panel.style.display === 'none') {
-        panel.style.display = 'block';
-        updateStats();
-    } else {
-        panel.style.display = 'none';
-    }
-}
-
-function updateStats() {
-    const stats = analytics.getStats();
-    const content = document.getElementById('stats-content');
-    
-    let html = `<p><strong>Total Visits:</strong> ${stats.totalVisits}</p>`;
-    
-    html += '<h4>Page Views:</h4><ul>';
-    for (const page in stats.pageStats) {
-        html += `<li>${page}: ${stats.pageStats[page]} visits</li>`;
-    }
-    html += '</ul>';
-    
-    html += '<h4>Daily Stats:</h4><ul>';
-    const sortedDates = Object.keys(stats.dailyStats).sort().reverse();
-    for (const date of sortedDates) {
-        html += `<li>${date}: ${stats.dailyStats[date]} visits</li>`;
-    }
-    html += '</ul>';
-    
-    content.innerHTML = html;
-}
-
-// Check login status when page loads
-document.addEventListener('DOMContentLoaded', checkAndShowControls);
-
-// Update stats every minute if panel is visible
-setInterval(() => {
-    const panel = document.getElementById('analytics-panel');
-    if (panel.style.display === 'block') {
-        updateStats();
-    }
-}, 60000);
-</script>
+    <!-- Login Button -->
+    <button onclick="showLogin()" style="position: fixed; bottom: 20px; right: 20px; padding: 10px; border-radius: 5px; border: none; background: transparent; cursor: pointer; color: transparent;">.</button>
 </body>
 </html>
