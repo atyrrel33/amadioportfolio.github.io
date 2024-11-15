@@ -16,7 +16,6 @@ class SimpleAnalytics {
     trackPageView() {
         const currentPath = window.location.pathname;
         const visits = JSON.parse(localStorage.getItem(this.storageKey));
-        
         const today = new Date().toISOString().split('T')[0];
         
         if (!visits[currentPath]) {
@@ -74,13 +73,5 @@ class SimpleAnalytics {
 }
 
 // Initialize analytics
-const analytics = new SimpleAnalytics();
-analytics.trackPageView();
-
-// Only show the button if logged in or after successful login
-function checkAndShowControls() {
-    const controls = document.getElementById('analytics-controls');
-    if (controls) {
-        controls.style.display = analytics.isLoggedIn() ? 'block' : 'none';
-    }
-}
+window.analytics = new SimpleAnalytics();
+window.analytics.trackPageView();
