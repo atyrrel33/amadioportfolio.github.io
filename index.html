@@ -325,18 +325,38 @@
             }
         });
     <script src="analytics.js"></script>
-    <!-- analytics-display.html -->
-<div id="analytics-panel" style="display: none; position: fixed; bottom: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-    <h3>Site Analytics</h3>
-    <div id="stats-content"></div>
-    <button onclick="toggleAnalytics()" style="position: absolute; top: 10px; right: 10px; border: none; background: none; cursor: pointer;">×</button>
+<!-- Add this to your HTML file -->
+<div id="analytics-controls" style="display: none;">
+    <div id="analytics-panel" style="display: none; position: fixed; bottom: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;">
+        <h3>Site Analytics</h3>
+        <div id="stats-content"></div>
+        <button onclick="toggleAnalytics()" style="position: absolute; top: 10px; right: 10px; border: none; background: none; cursor: pointer;">×</button>
+        <button onclick="logout()" style="margin-top: 10px; padding: 5px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">Logout</button>
+    </div>
+
+    <button onclick="toggleAnalytics()" style="position: fixed; bottom: 20px; right: 20px; padding: 10px; border-radius: 5px; border: none; background: #007bff; color: white; cursor: pointer;">
+        Show Analytics
+    </button>
 </div>
 
-<button onclick="toggleAnalytics()" style="position: fixed; bottom: 20px; right: 20px; padding: 10px; border-radius: 5px; border: none; background: #007bff; color: white; cursor: pointer;">
-    Show Analytics
-</button>
+<!-- Add a hidden login button that's always visible -->
+<button onclick="showLogin()" style="position: fixed; bottom: 20px; right: 20px; padding: 10px; border-radius: 5px; border: none; background: transparent; cursor: pointer; color: transparent;">.</button>
 
 <script>
+function showLogin() {
+    const password = prompt('Enter password to view analytics:');
+    if (analytics.login(password)) {
+        checkAndShowControls();
+    }
+}
+
+function logout() {
+    analytics.logout();
+    checkAndShowControls();
+    const panel = document.getElementById('analytics-panel');
+    panel.style.display = 'none';
+}
+
 function toggleAnalytics() {
     const panel = document.getElementById('analytics-panel');
     if (panel.style.display === 'none') {
@@ -369,8 +389,16 @@ function updateStats() {
     content.innerHTML = html;
 }
 
-// Update stats every minute
-setInterval(updateStats, 60000);
+// Check login status when page loads
+document.addEventListener('DOMContentLoaded', checkAndShowControls);
+
+// Update stats every minute if panel is visible
+setInterval(() => {
+    const panel = document.getElementById('analytics-panel');
+    if (panel.style.display === 'block') {
+        updateStats();
+    }
+}, 60000);
 </script>
 </body>
 </html>
